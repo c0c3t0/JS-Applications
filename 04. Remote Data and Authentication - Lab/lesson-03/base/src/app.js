@@ -2,7 +2,7 @@ async function getRecipes() {
     const response = await fetch('http://localhost:3030/data/recipes');
     const recipes = await response.json();
 
-    return Object.values(recipes);
+    return recipes;
 }
 
 async function getRecipeById(id) {
