@@ -32,10 +32,8 @@ async function login(e) {
         if (!response.ok || response.status != 200) {
             form.reset();
             throw new Error(error.message)
-
         }
 
-        console.log(data);
         sessionStorage.setItem('accessToken', data.accessToken);
         sessionStorage.setItem('email', data.email);
         sessionStorage.setItem('username', data.username);

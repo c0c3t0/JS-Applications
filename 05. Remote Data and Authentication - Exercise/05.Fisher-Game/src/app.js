@@ -2,12 +2,11 @@ const userNav = document.querySelector('#user');
 const guestNav = document.querySelector('#guest');
 const greetingMsg = document.querySelector('.email span');
 const logoutBtn = document.querySelector('#logout');
-const loadBtn = document.querySelector('.load');
+
 const catches = document.querySelector('#catches');
+const loadBtn = document.querySelector('.load');
 const addBtn = document.querySelector('.add');
 const addForm = document.querySelector('#addForm');
-
-
 
 async function getCatches() {
     try {
@@ -20,10 +19,10 @@ async function getCatches() {
 
         catches.replaceChildren();
         Object.values(data).forEach(x => {
-            console.log(x);
             let catchDiv = htmlGenerator('div', '', catches, 'catch');
             htmlGenerator('label', 'Angler', catchDiv);
             htmlGenerator('input', '', catchDiv, 'angler', 'text', `${x.angler}`);
+
             htmlGenerator('label', 'Weight', catchDiv);
             htmlGenerator('input', '', catchDiv, 'weight', 'text', `${x.weight}`);
 
@@ -32,21 +31,27 @@ async function getCatches() {
 
             htmlGenerator('label', 'Location', catchDiv);
             htmlGenerator('input', '', catchDiv, 'location', 'text', `${x.location}`);
+
             htmlGenerator('label', 'Bait', catchDiv);
             htmlGenerator('input', '', catchDiv, 'bait', 'text', `${x.bait}`);
+
             htmlGenerator('label', 'Capture Time', catchDiv);
             htmlGenerator('input', '', catchDiv, 'captureTime', 'text', `${x.captureTime}`);
+
             let updateBtn = htmlGenerator('button', 'Update', catchDiv, 'update');
             updateBtn.setAttribute('data-id', `${x._id}`);
             updateBtn.setAttribute('owner-id', `${x._ownerId}`);
+            updateBtn.addEventListener('click', updateCatch);
+
             let deleteBtn = htmlGenerator('button', 'Delete', catchDiv, 'delete');
             deleteBtn.setAttribute('data-id', `${x._id}`);
             deleteBtn.setAttribute('owner-id', `${x._ownerId}`);
+            deleteBtn.addEventListener('click', deleteCatch);
         })
-        toggleBtns();
     } catch (error) {
-        console.error(error.message);
+        alert(error.message);
     }
+    toggleBtns();
 }
 
 async function createCatch(e) {
@@ -68,8 +73,18 @@ async function createCatch(e) {
     try {
         let response = await fetch('http://localhost:3030/data/catches', {
             method: 'POST',
-            headers: { 'content-type': 'application/json', 'X-Authorization': sessionStorage.getItem('accessToken') },
-            body: JSON.stringify({ angler, weight, species, location, bait, captureTime })
+            headers: {
+                'content-type': 'application/json',
+                'X-Authorization': sessionStorage.getItem('accessToken')
+            },
+            body: JSON.stringify({
+                angler,
+                weight,
+                species,
+                location,
+                bait,
+                captureTime
+            })
         })
         let data = await response.json();
 
@@ -77,8 +92,54 @@ async function createCatch(e) {
             throw new Error(data.message);
         }
     } catch (error) {
-        console.error(error.message);
+        alert(error.message);
     }
+    addForm.reset();
+    getCatches();
+}
+
+async function updateCatch(e) {
+    let catchId = e.target.getAttribute('data-id');
+    let [angler, weight, species, location, bait, captureTime] = e.target.parentNode.querySelectorAll('input');
+
+    let info = {
+        angler: angler.value,
+        weight: Number(weight.value),
+        species: species.value,
+        location: location.value,
+        bait: bait.value,
+        captureTime: Number(captureTime.value)
+    }
+
+    try {
+        let response = await fetch(`http://localhost:3030/data/catches/${catchId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Authorization': sessionStorage.getItem('accessToken')
+            },
+            body: JSON.stringify(info)
+        })
+
+        if (response.status != 200 || !response.ok) {
+            let data = await response.json();
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function deleteCatch(e) {
+    let catchId = e.target.getAttribute('data-id');
+
+    await fetch(`http://localhost:3030/data/catches/${catchId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': sessionStorage.getItem('accessToken')
+        },
+    });
 
     getCatches();
 }
@@ -99,8 +160,8 @@ window.addEventListener('load', async () => {
         userNav.style.display = 'inline-block';
         guestNav.style.display = 'none';
         greetingMsg.textContent = sessionStorage.getItem('email');
-        logoutBtn.addEventListener('click', logout);
         addBtn.disabled = false;
+        logoutBtn.addEventListener('click', logout);
     } else {
         userNav.style.display = 'none';
         guestNav.style.display = 'inline-block';

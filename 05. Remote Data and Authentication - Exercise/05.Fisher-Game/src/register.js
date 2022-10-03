@@ -28,7 +28,9 @@ async function registerUser(e) {
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ 
+                email, 
+                password })
         })
         let data = await response.json();
 
@@ -36,6 +38,7 @@ async function registerUser(e) {
             form.reset();
             throw new Error(data.message);
         }
+        
         sessionStorage.setItem('accessToken', data.accessToken);
         sessionStorage.setItem('username', data.username);
         sessionStorage.setItem('email', data.email);
