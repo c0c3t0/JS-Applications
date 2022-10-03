@@ -1,4 +1,5 @@
 const form = document.querySelector('form');
+const notification = form.querySelector('.notification');
 
 form.addEventListener('submit', login);
 
@@ -11,7 +12,7 @@ async function login(e) {
     let password = formData.get('password');
 
     if (email == '' || password == '') {
-        form.querySelector('.notification').textContent = 'All fields are required!'
+        notification.textContent = 'All fields are required!'
         return;
     }
 
@@ -30,7 +31,8 @@ async function login(e) {
 
         if (!response.ok || response.status != 200) {
             form.reset();
-            throw new Error(data.message);
+            throw new Error(error.message)
+
         }
 
         console.log(data);
@@ -39,8 +41,8 @@ async function login(e) {
         sessionStorage.setItem('username', data.username);
         sessionStorage.setItem('_id', data._id);
         window.location.href = './index.html'
-            
+
     } catch (error) {
-        form.querySelector('.notification').textContent = error.message;
+        notification.textContent = error.message;
     }
 }
