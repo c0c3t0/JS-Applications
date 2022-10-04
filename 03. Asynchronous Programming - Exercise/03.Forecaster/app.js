@@ -117,3 +117,5 @@ function clearInfo() {
 }
 
 attachEvents()
+
+
