@@ -1,3 +1,4 @@
+
 async function lockedProfile() {
     let baseUrl = 'http://localhost:3030/jsonstore/advanced/profiles';
     let main = document.querySelector("#main");
@@ -9,6 +10,7 @@ async function lockedProfile() {
             throw new Error('Error');
         }
         let data = await response.json();
+        let id = 1;
 
         for (let info of Object.values(data)) {
             let divProfile = htmlGenerator('div', '', main, 'profile');
@@ -16,22 +18,20 @@ async function lockedProfile() {
             imgUserIcon.setAttribute('src', './iconProfile2.png');
             
             htmlGenerator('label', 'Lock', divProfile);
-            let inputLock = htmlGenerator('input', '', divProfile, '', 'radio', 'userLocked');
-            inputLock.value = 'lock';
-            inputLock.checked = true;
+            let inputLock = htmlGenerator('input', '', divProfile, '', 'radio', `user${id}Locked`, 'lock');
+            inputLock.setAttribute('checked', 'checked');
 
             htmlGenerator('label', 'Unlock', divProfile);
-            let inputUnlock = htmlGenerator('input', '', divProfile, '', 'radio', 'userLocked');
-            inputUnlock.value = 'unlock';
+            let inputUnlock = htmlGenerator('input', '', divProfile, '', 'radio', `user${id}Locked`, 'unlock');
 
             htmlGenerator('br', '', divProfile);
             htmlGenerator('hr', '', divProfile);
 
             htmlGenerator('label', 'Username', divProfile);
-            let inputUsername = htmlGenerator('input', '', divProfile, '', 'text', 'userUsername');
-            inputUsername.value = `${info.username}`;
+            let inputUsername = htmlGenerator('input', '', divProfile, '', 'text', `user${id}Username`, info.username);
             inputUsername.disabled = true;
             inputUsername.readonly = true;
+
 
             let divUsername = htmlGenerator('div', '', divProfile);
             divUsername.id = 'userHiddenFields';
@@ -40,16 +40,16 @@ async function lockedProfile() {
             htmlGenerator('hr', '', divUsername);
 
             htmlGenerator('label', 'Email:', divUsername);
-            let inputEmail = htmlGenerator('input', '', divUsername, '', 'email', 'userEmail');
-            inputEmail.value = `${info.email}`;
+            let inputEmail = htmlGenerator('input', '', divUsername, '', 'email', `user${id}Email`, info.email);
             inputEmail.disabled = true;
             inputEmail.readonly = true;
 
             htmlGenerator('label', 'Age:', divUsername);
-            let inputAge = htmlGenerator('input', '', divUsername, '', 'text', 'userAge');
-            inputAge.value = `${info.age}`;
+            let inputAge = htmlGenerator('input', '', divUsername, '', 'email', `user${id}Age`, info.age);
             inputAge.disabled = true;
             inputAge.readonly = true;
+
+            id++;
 
             let showMoreBtn = htmlGenerator('button', 'Show more', divProfile);
             showMoreBtn.addEventListener('click', (e) => {
@@ -67,7 +67,7 @@ async function lockedProfile() {
     }
 }
 
-function htmlGenerator(tagName, text, parent, className, type, name) {
+function htmlGenerator(tagName, text, parent, className, type, name, value) {
     let el = document.createElement(tagName);
     el.textContent = text;
 
@@ -87,5 +87,11 @@ function htmlGenerator(tagName, text, parent, className, type, name) {
         el.name = name;
     }
 
+    if (value) {
+        el.setAttribute('value', value);
+    }
+
     return el;
 }
+
+
