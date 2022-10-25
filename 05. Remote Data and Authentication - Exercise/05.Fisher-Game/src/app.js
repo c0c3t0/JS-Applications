@@ -1,3 +1,5 @@
+// -------> 78/100 <--------
+
 const userNav = document.querySelector('#user');
 const guestNav = document.querySelector('#guest');
 const greetingMsg = document.querySelector('.email span');
@@ -21,31 +23,31 @@ async function getCatches() {
         Object.values(data).forEach(x => {
             let catchDiv = htmlGenerator('div', '', catches, 'catch');
             htmlGenerator('label', 'Angler', catchDiv);
-            htmlGenerator('input', '', catchDiv, 'angler', 'text', `${x.angler}`);
+            htmlGenerator('input', '', catchDiv, 'angler', 'text', x.angler);
 
             htmlGenerator('label', 'Weight', catchDiv);
-            htmlGenerator('input', '', catchDiv, 'weight', 'text', `${x.weight}`);
+            htmlGenerator('input', '', catchDiv, 'weight', 'text', x.weight);
 
             htmlGenerator('label', 'Species', catchDiv);
-            htmlGenerator('input', '', catchDiv, 'species', 'text', `${x.species}`);
+            htmlGenerator('input', '', catchDiv, 'species', 'text', x.species);
 
             htmlGenerator('label', 'Location', catchDiv);
-            htmlGenerator('input', '', catchDiv, 'location', 'text', `${x.location}`);
+            htmlGenerator('input', '', catchDiv, 'location', 'text', x.location);
 
             htmlGenerator('label', 'Bait', catchDiv);
-            htmlGenerator('input', '', catchDiv, 'bait', 'text', `${x.bait}`);
+            htmlGenerator('input', '', catchDiv, 'bait', 'text', x.bait);
 
             htmlGenerator('label', 'Capture Time', catchDiv);
-            htmlGenerator('input', '', catchDiv, 'captureTime', 'text', `${x.captureTime}`);
+            htmlGenerator('input', '', catchDiv, 'captureTime', 'text', x.captureTime);
 
             let updateBtn = htmlGenerator('button', 'Update', catchDiv, 'update');
-            updateBtn.setAttribute('data-id', `${x._id}`);
-            updateBtn.setAttribute('owner-id', `${x._ownerId}`);
+            updateBtn.setAttribute('data-id', x._id);
+            updateBtn.setAttribute('owner-id', x._ownerId);
             updateBtn.addEventListener('click', updateCatch);
 
             let deleteBtn = htmlGenerator('button', 'Delete', catchDiv, 'delete');
-            deleteBtn.setAttribute('data-id', `${x._id}`);
-            deleteBtn.setAttribute('owner-id', `${x._ownerId}`);
+            deleteBtn.setAttribute('data-id', x._id);
+            deleteBtn.setAttribute('owner-id', x._ownerId);
             deleteBtn.addEventListener('click', deleteCatch);
         })
     } catch (error) {
@@ -104,11 +106,11 @@ async function updateCatch(e) {
 
     let info = {
         angler: angler.value,
-        weight: Number(weight.value),
+        weight: weight.value,
         species: species.value,
         location: location.value,
         bait: bait.value,
-        captureTime: Number(captureTime.value)
+        captureTime: captureTime.value
     }
 
     try {
@@ -194,10 +196,10 @@ function htmlGenerator(tag, text, parent, className, type, value) {
         el.className = className;
     }
     if (type) {
-        el.type = type;
+        el.setAttribute('type', type);
     }
     if (value) {
-        el.value = value;
+        el.setAttribute('value', value);
     }
     return el;
 }
