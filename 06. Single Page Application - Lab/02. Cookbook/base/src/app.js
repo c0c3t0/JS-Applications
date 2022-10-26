@@ -12,10 +12,31 @@ window.addEventListener('load', async () => {
         const recipes = await getRecipes();
         const cards = recipes.map(createRecipePreview);
 
-        main.innerHTML = '';
-        cards.forEach(c => main.appendChild(c));
-
+                main.innerHTML = '';
+        cards.forEach(card => main.appendChild(card));
     }
+
+    showNav();
+
+
+    const anchorTags = {
+        catalogLink: showCatalog,
+        loginLink,
+        registerLink
+    }
+
+    function showNav(){
+        nav.addEventListener('click', (e) => {
+            if(e.target.tagName === 'A') {
+                if(anchorTags[e.target.id]) {
+                    e.preventDefault();
+                    anchorTags[e.target.id]();          // debug this
+                }
+            }
+        })
+    }
+
+
 
 
 
@@ -41,7 +62,6 @@ window.addEventListener('load', async () => {
             .then(response => {
                 if (response.ok) {
                     sessionStorage.removeItem('accessToken');
-                    // window.location.pathname = '06. Single Page Application - Lab/02. Cookbook/base/index.html';
                 } else {
                     console.error(response.json())
                 }
