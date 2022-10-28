@@ -1,36 +1,33 @@
-import { getRecipes, createRecipePreview } from './catalog.js';
+import { showCatalog } from './catalog.js';
+import { showLogin } from './login.js';
+import { showRegister } from './register.js'
 
 
 window.addEventListener('load', async () => {
-    setUserNav();
-    showCatalog();
-
-    const main = document.querySelector('main');
     const nav = document.querySelector('nav');
-
-    async function showCatalog() {
-        const recipes = await getRecipes();
-        const cards = recipes.map(createRecipePreview);
-
-                main.innerHTML = '';
-        cards.forEach(card => main.appendChild(card));
-    }
-
     showNav();
 
+    if (sessionStorage.getItem('accessToken') !== null) {
+        document.querySelector('#user').style.display = 'inline-block';
+        document.querySelector('#guest').style.display = 'none';
+    } else {
+        document.querySelector('#user').style.display = 'none';
+        document.querySelector('#guest').style.display = 'inline-block';
+    }
 
     const anchorTags = {
         catalogLink: showCatalog,
-        loginLink,
-        registerLink
+        loginLink: showLogin,
+        registerLink: showRegister
     }
 
-    function showNav(){
+    function showNav() {
         nav.addEventListener('click', (e) => {
-            if(e.target.tagName === 'A') {
-                if(anchorTags[e.target.id]) {
+            if (e.target.tagName === 'A') {
+                const view = anchorTags[e.target.id];
+                if (typeof view === 'function') {
                     e.preventDefault();
-                    anchorTags[e.target.id]();          // debug this
+                    view();          // debug this
                 }
             }
         })
@@ -42,15 +39,7 @@ window.addEventListener('load', async () => {
 
 
 
-    function setUserNav() {
-        if (sessionStorage.getItem('accessToken') !== null) {
-            document.querySelector('#user').style.display = 'inline-block';
-            document.querySelector('#guest').style.display = 'none';
-        } else {
-            document.querySelector('#user').style.display = 'none';
-            document.querySelector('#guest').style.display = 'inline-block';
-        }
-    }
+
 
     function logout() {
         fetch('http://localhost:3030/users/logout', {
