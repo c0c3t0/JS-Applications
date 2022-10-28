@@ -1,6 +1,7 @@
 import { showCatalog } from './catalog.js';
 import { showLogin } from './login.js';
 import { showRegister } from './register.js'
+import { logout } from './logout.js';
 
 
 window.addEventListener('load', async () => {
@@ -18,7 +19,8 @@ window.addEventListener('load', async () => {
     const anchorTags = {
         catalogLink: showCatalog,
         loginLink: showLogin,
-        registerLink: showRegister
+        registerLink: showRegister,
+        logoutBtn: logout
     }
 
     function showNav() {
@@ -32,31 +34,4 @@ window.addEventListener('load', async () => {
             }
         })
     }
-
-
-
-
-
-
-
-
-
-    function logout() {
-        fetch('http://localhost:3030/users/logout', {
-            method: 'GET',
-            headers: {
-                'X-Authorization': sessionStorage.getItem('accessToken')
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    sessionStorage.removeItem('accessToken');
-                } else {
-                    console.error(response.json())
-                }
-            })
-    }
-});
-
-
-
+})

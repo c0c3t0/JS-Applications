@@ -1,3 +1,5 @@
+// remove toggle recipe
+
 import { showCatalog } from "./catalog.js";
 import { showSection } from "./dom.js";
 
