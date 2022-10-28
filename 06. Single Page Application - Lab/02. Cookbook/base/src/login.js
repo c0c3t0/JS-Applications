@@ -1,7 +1,6 @@
 import { showCatalog } from "./catalog.js";
 import { showSection } from "./dom.js";
 
-const main = document.querySelector('main');
 const section = document.querySelector('#login');
 
 const loginForm = document.querySelector('#login form');
@@ -36,7 +35,7 @@ async function loginUser(e) {
             })
         });
         const data = await response.json();
-        if (response.status != 200 || !response.ok) {
+        if (!response.ok) {
             form.reset();
             throw new Error(response.message);
         }
