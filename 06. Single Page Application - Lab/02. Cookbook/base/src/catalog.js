@@ -1,15 +1,21 @@
-import { htmlGenerator } from './dom.js';
+import { htmlGenerator, setActiveNav } from './dom.js';
+import { showDetails } from './details.js';
 
 const main = document.querySelector('main');
 
-export async function showCatalog(catalog) {
+export async function showCatalog() {
     main.replaceChildren();
+    setActiveNav('catalogLink');
 
     const section = htmlGenerator('section', '', '', main);
 
     try {
-        const response = await fetch('http://localhost:3030/jsonstore/cookbook/recipes')
+        const response = await fetch('http://localhost:3030/data/recipes')
         const data = await response.json();
+
+        if(!response.ok) {
+            throw new Error(response.message);
+        }
 
         Object.values(data)
             .forEach(x => {
@@ -20,7 +26,7 @@ export async function showCatalog(catalog) {
                 const img = htmlGenerator('img', '', '', div2);
                 img.setAttribute('src', x.img);
 
-                article.addEventListener('click', () => reciepeDetails(x._id, article));
+                article.addEventListener('click', () => showDetails(x._id));
             });
 
         if (!response.ok) {
@@ -30,47 +36,4 @@ export async function showCatalog(catalog) {
     } catch (error) {
         alert(error.message);
     }
-}
-
-async function reciepeDetails(id, recipe) {
-    try {
-        const response = await fetch(`http://localhost:3030/jsonstore/cookbook/details/${id}`)
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(response.message);
-        }
-
-        const article = htmlGenerator('article', '', 'preview', main);
-
-        htmlGenerator('h2', data.name, '', article);
-        const divBand = htmlGenerator('div', '', 'band', article);
-        const divThumb = htmlGenerator('div', '', 'thumb', divBand);
-
-        const img = htmlGenerator('img', '', '', divThumb);
-        img.setAttribute('src', data.img);
-
-        const divIngredients = htmlGenerator('div', '', 'ingredients', divBand);
-        htmlGenerator('h3', 'Ingredients:', '', divIngredients);
-        const ul = htmlGenerator('ul', '', '', divIngredients);
-        data.ingredients.forEach(ingr => {
-            htmlGenerator('li', ingr, '', ul);
-        })
-        const divDescription = htmlGenerator('div', '', 'description', article);
-        htmlGenerator('h3', 'Preparation:', '', divDescription);
-        data.steps.forEach(step => {
-            htmlGenerator('p', step, '', divDescription);
-        });
-        const buttonsDiv = htmlGenerator('div', '', 'controls', article);
-        const editBtn = htmlGenerator('button', '\u270E Edit', '', buttonsDiv);
-        const deleteBtn = htmlGenerator('button', '\u2716 Delete', '', buttonsDiv);
-
-        // editBtn.addEventListener('click', editRecipe);
-        // deleteBtn.addEventListener('click', deleteRecipe);
-        recipe.replaceWith(article);
-
-    } catch (error) {
-        alert(error.message);
-    }
-
 }
