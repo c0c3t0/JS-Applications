@@ -1,24 +1,23 @@
-// remove toggle recipe
-
 import { showCatalog } from "./catalog.js";
-import { showSection } from "./dom.js";
-
-const section = document.querySelector('#login');
+import { showSection, setActiveNav } from "./dom.js";
 
 const loginForm = document.querySelector('#login form');
 loginForm.addEventListener('submit', loginUser);
 
+const section = document.querySelector('#login');
+section.remove();
+
 export function showLogin() {
     showSection(section);
+    setActiveNav('loginLink');
 }
 
 async function loginUser(e) {
     e.preventDefault();
 
-    let formData = new FormData(e.target);
-
-    let email = formData.get('email');
-    let password = formData.get('password');
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
 
     if (email === '' || password === '') {
         alert('All fields are required!');
@@ -54,6 +53,4 @@ async function loginUser(e) {
     } catch (error) {
         alert(error.message);
     }
-
 }
-
