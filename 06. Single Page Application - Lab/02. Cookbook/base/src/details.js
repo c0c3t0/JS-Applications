@@ -1,35 +1,65 @@
-import { e } from './dom.js'
+import { htmlGenerator, setActiveNav, showSection } from './dom.js';
+// import { showEdit } from './edit.js';
 
+const main = document.querySelector('main');
+const nav = document.querySelector('nav');
 
-export async function getRecipeById(id) {
-    const response = await fetch('http://localhost:3030/data/recipes/' + id);
-    const recipe = await response.json();
+const section = document.querySelector('#details');
+section.remove();
 
-    return recipe;
+export function showDetails(id) {
+    showSection(section);
+    recipeDetails(id);
+    setActiveNav();
 }
 
-export function createRecipeCard(recipe) {
-    const result = e('article', {},
-        e('h2', {}, recipe.name),
-        e('div', { className: 'band' },
-            e('div', { className: 'thumb' }, e('img', { src: recipe.img })),
-            e('div', { className: 'ingredients' },
-                e('h3', {}, 'Ingredients:'),
-                e('ul', {}, recipe.ingredients.map(i => e('li', {}, i))),
-            )
-        ),
-        e('div', { className: 'description' },
-            e('h3', {}, 'Preparation:'),
-            recipe.steps.map(s => e('p', {}, s))
-        ),
-    );
-    const userId = sessionStorage.getItem('userId');
-    if (userId != null && recipe._ownerId == userId) {
-        result.appendChild(e('div', { className: 'controls' },
-            e('button', '\u270E Edit'),
-            e('button', '\u2716 Delete'),
-        ));
-    }
+export async function recipeDetails(id) {
+    try {
+        const response = await fetch(`http://localhost:3030/data/recipes/${id}`)
+        const data = await response.json();
+        console.log(data);
 
-    return result;
+        if (!response.ok) {
+            throw new Error(response.message);
+        }
+
+        const article = htmlGenerator('article', '', 'preview', main);
+
+        htmlGenerator('h2', data.name, '', article);
+        const divBand = htmlGenerator('div', '', 'band', article);
+        const divThumb = htmlGenerator('div', '', 'thumb', divBand);
+
+        const img = htmlGenerator('img', '', '', divThumb);
+        img.setAttribute('src', data.img);
+
+        const divIngredients = htmlGenerator('div', '', 'ingredients', divBand);
+        htmlGenerator('h3', 'Ingredients:', '', divIngredients);
+        const ul = htmlGenerator('ul', '', '', divIngredients);
+        data.ingredients.forEach(ingr => {
+            htmlGenerator('li', ingr, '', ul);
+        })
+
+        const divDescription = htmlGenerator('div', '', 'description', article);
+        htmlGenerator('h3', 'Preparation:', '', divDescription);
+        data.steps.forEach(step => {
+            htmlGenerator('p', step, '', divDescription);
+        });
+
+        const userId = sessionStorage.getItem('userId');
+
+        if (userId !== null && data._ownerId === userId) {
+            const buttonsDiv = htmlGenerator('div', '', 'controls', article);
+            const editBtn = htmlGenerator('button', '\u270E Edit', '', buttonsDiv);
+            const deleteBtn = htmlGenerator('button', '\u2716 Delete', '', buttonsDiv);
+
+            // editBtn.addEventListener('click', editRecipe(data._id));
+            // deleteBtn.addEventListener('click', deleteRecipe);
+        }
+
+        section.replaceChildren();
+        section.appendChild(article);
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
