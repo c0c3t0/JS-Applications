@@ -8,7 +8,6 @@ export async function logout() {
                 'X-Authorization': sessionStorage.getItem('accessToken')
             }
         });
-
         if (response.ok) {
             sessionStorage.removeItem('accessToken');
             document.querySelector('#user').style.display = 'none';
@@ -18,10 +17,8 @@ export async function logout() {
         } else {
             throw new Error(await response.json());
         }
-
     } catch (error) {
         alert(error.message)
     }
-
 }
 
