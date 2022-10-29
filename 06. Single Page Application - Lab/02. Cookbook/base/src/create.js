@@ -1,22 +1,36 @@
-const form = document.querySelector('form');
+import { showCatalog } from './catalog.js';
+import { showSection, setActiveNav } from './dom.js';
 
-form.addEventListener('submit', (e) => {
+const form = document.querySelector('#create form');
+form.addEventListener('submit', createReciepe);
+
+const section = document.querySelector('#create');
+section.remove();
+
+export function showCreate() {
+    showSection(section);
+    setActiveNav('createLink');
+}
+
+async function createReciepe(e) {
     e.preventDefault();
 
-    let data = new FormData(e.target);
-    let name = data.get('name');
-    let img = data.get('img');
-    let ingredients = data.get('ingredients').split('\n');
-    let steps = data.get('steps').split('\n');
-    console.log(steps);
+    const data = new FormData(e.target);
+    const name = data.get('name');
+    const img = data.get('img');
+    const ingredients = data.get('ingredients').split('\n');
+    console.log(ingredients);
+    const steps = data.get('steps').split('\n');
 
-    let token = sessionStorage.getItem('accessToken');
-    if (!token){
-        window.location.pathname = '06. Single Page Application - Lab/02. Cookbook/base/index.html';
+    if (name === '' || img === '' || ingredients === '' || steps === '') {
+        alert('All fields are required');
+        return;
     }
 
+    const token = sessionStorage.getItem('accessToken');
+
     try {
-        fetch('http://localhost:3030/data/recipes', {
+        const response = await fetch('http://localhost:3030/data/recipes', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -28,16 +42,14 @@ form.addEventListener('submit', (e) => {
                 ingredients,
                 steps
             })
+        });
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message);
+        }
+        showCatalog();
 
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.pathname = '06. Single Page Application - Lab/02. Cookbook/base/index.html';
-                } else {
-                    throw new Error(response.json());
-                }
-            })
     } catch (error) {
-        console.error(error.message)
+        alert(error.message);
     }
-})
+}
