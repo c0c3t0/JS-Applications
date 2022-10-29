@@ -2,6 +2,7 @@ import { showCatalog } from './catalog.js';
 import { showLogin } from './login.js';
 import { showRegister } from './register.js'
 import { logout } from './logout.js';
+import { showCreate } from './create.js';
 
 
 window.addEventListener('load', async () => {
@@ -16,8 +17,11 @@ window.addEventListener('load', async () => {
         document.querySelector('#guest').style.display = 'inline-block';
     }
 
+    showCatalog();
+
     const anchorTags = {
         catalogLink: showCatalog,
+        createLink: showCreate,
         loginLink: showLogin,
         registerLink: showRegister,
         logoutBtn: logout
