@@ -1,29 +1,30 @@
 import { showCatalog } from "./catalog.js";
-import { showSection } from "./dom.js";
-
-const section = document.querySelector('#register');
+import { showSection, setActiveNav } from "./dom.js";
 
 const registerForm = document.querySelector('#register form');
 registerForm.addEventListener('submit', registerUser);
 
+const section = document.querySelector('#register');
+section.remove();
+
 export function showRegister() {
     showSection(section);
+    setActiveNav('registerLink');
 }
 
 async function registerUser(e) {
     e.preventDefault();
 
-    let formData = new FormData(e.target);
-
-    let email = formData.get('email');
-    let password = formData.get('password');
-    let rePass = formData.get('rePass');
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const rePass = formData.get('rePass');
 
     if (email === '' || password === '' || rePass === '') {
         alert('All fields are required!');
         return;
     }
-    if(password !== rePass){
+    if (password !== rePass) {
         alert('Passwords don\'t match');
         return;
     }
