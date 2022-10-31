@@ -1,10 +1,10 @@
 import { htmlGenerator, setActiveNav, showSection } from './dom.js';
-// import { showEdit } from './edit.js';
+import { showEdit } from './edit.js';
+import { deleteRecipe } from './delete.js';
 
 const main = document.querySelector('main');
 
 const section = document.querySelector('#details');
-section.remove();
 
 export function showDetails(id) {
     showSection(section);
@@ -50,7 +50,7 @@ export async function recipeDetails(id) {
             const editBtn = htmlGenerator('button', '\u270E Edit', '', buttonsDiv);
             const deleteBtn = htmlGenerator('button', '\u2716 Delete', '', buttonsDiv);
 
-            // editBtn.addEventListener('click', editRecipe(data._id));
+            editBtn.addEventListener('click', () => showEdit(data));
             deleteBtn.addEventListener('click', () => deleteRecipe(data));
         }
 
@@ -59,32 +59,5 @@ export async function recipeDetails(id) {
 
     } catch (error) {
         alert(error.message);
-    }
-}
-
-async function deleteRecipe(recipe) {
-    const confirmed = confirm(`Are you sure you want to delete ${recipe.name}?`);
-    if (confirmed) {
-        const token = sessionStorage.getItem('accessToken');
-        try {
-            const response = await fetch(`http://localhost:3030/data/recipes/${recipe._id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-Authorization': token
-                }
-            });
-
-            if (response.status != 200) {
-                const error = await response.json();
-                throw new Error(error.message);
-            }
-
-            section.replaceChildren();
-            const article = htmlGenerator('article');
-            htmlGenerator('h2', 'Recipe Deleted', '', article);
-            section.appendChild(article);
-        } catch (error) {
-            alert(error.message);
-        }
     }
 }
