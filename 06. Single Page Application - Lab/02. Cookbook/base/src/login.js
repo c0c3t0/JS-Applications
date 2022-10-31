@@ -5,7 +5,6 @@ const loginForm = document.querySelector('#login form');
 loginForm.addEventListener('submit', loginUser);
 
 const section = document.querySelector('#login');
-section.remove();
 
 export function showLogin() {
     showSection(section);
