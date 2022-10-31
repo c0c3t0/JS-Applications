@@ -19,7 +19,6 @@ async function createReciepe(e) {
     const name = data.get('name');
     const img = data.get('img');
     const ingredients = data.get('ingredients').split('\n');
-    console.log(ingredients);
     const steps = data.get('steps').split('\n');
 
     if (name === '' || img === '' || ingredients === '' || steps === '') {
