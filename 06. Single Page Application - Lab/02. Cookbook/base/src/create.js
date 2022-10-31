@@ -5,7 +5,6 @@ const form = document.querySelector('#create form');
 form.addEventListener('submit', createReciepe);
 
 const section = document.querySelector('#create');
-section.remove();
 
 export function showCreate() {
     showSection(section);
