@@ -33,7 +33,7 @@ window.addEventListener('load', async () => {
                 const view = anchorTags[e.target.id];
                 if (typeof view === 'function') {
                     e.preventDefault();
-                    view();          // debug this
+                    view();
                 }
             }
         })
