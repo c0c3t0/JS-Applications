@@ -2,7 +2,6 @@ import { htmlGenerator, setActiveNav, showSection } from './dom.js';
 // import { showEdit } from './edit.js';
 
 const main = document.querySelector('main');
-const nav = document.querySelector('nav');
 
 const section = document.querySelector('#details');
 section.remove();
@@ -15,9 +14,8 @@ export function showDetails(id) {
 
 export async function recipeDetails(id) {
     try {
-        const response = await fetch(`http://localhost:3030/data/recipes/${id}`)
+        const response = await fetch(`http://localhost:3030/data/recipes/${id}`);
         const data = await response.json();
-        console.log(data);
 
         if (!response.ok) {
             throw new Error(response.message);
@@ -53,7 +51,7 @@ export async function recipeDetails(id) {
             const deleteBtn = htmlGenerator('button', '\u2716 Delete', '', buttonsDiv);
 
             // editBtn.addEventListener('click', editRecipe(data._id));
-            // deleteBtn.addEventListener('click', deleteRecipe);
+            deleteBtn.addEventListener('click', () => deleteRecipe(data));
         }
 
         section.replaceChildren();
@@ -61,5 +59,32 @@ export async function recipeDetails(id) {
 
     } catch (error) {
         alert(error.message);
+    }
+}
+
+async function deleteRecipe(recipe) {
+    const confirmed = confirm(`Are you sure you want to delete ${recipe.name}?`);
+    if (confirmed) {
+        const token = sessionStorage.getItem('accessToken');
+        try {
+            const response = await fetch(`http://localhost:3030/data/recipes/${recipe._id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-Authorization': token
+                }
+            });
+
+            if (response.status != 200) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
+
+            section.replaceChildren();
+            const article = htmlGenerator('article');
+            htmlGenerator('h2', 'Recipe Deleted', '', article);
+            section.appendChild(article);
+        } catch (error) {
+            alert(error.message);
+        }
     }
 }
