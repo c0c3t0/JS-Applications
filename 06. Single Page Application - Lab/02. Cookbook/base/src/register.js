@@ -5,7 +5,6 @@ const registerForm = document.querySelector('#register form');
 registerForm.addEventListener('submit', registerUser);
 
 const section = document.querySelector('#register');
-section.remove();
 
 export function showRegister() {
     showSection(section);
@@ -41,6 +40,7 @@ async function registerUser(e) {
             })
         });
         const data = await response.json();
+        
         if (!response.ok) {
             form.reset();
             throw new Error(data.message);
@@ -58,5 +58,4 @@ async function registerUser(e) {
     } catch (error) {
         alert(error.message);
     }
-
 }
