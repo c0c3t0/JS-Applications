@@ -4,7 +4,6 @@ import { showRegister } from './register.js'
 import { logout } from './logout.js';
 import { showCreate } from './create.js';
 
-
 window.addEventListener('load', async () => {
     const nav = document.querySelector('nav');
     showNav();
@@ -25,7 +24,7 @@ window.addEventListener('load', async () => {
         loginLink: showLogin,
         registerLink: showRegister,
         logoutBtn: logout
-    }
+    };
 
     function showNav() {
         nav.addEventListener('click', (e) => {
@@ -36,6 +35,6 @@ window.addEventListener('load', async () => {
                     view();
                 }
             }
-        })
+        });
     }
 })
