@@ -1,14 +1,10 @@
 import { getComments } from "./comments.js";
-import{showSelectedTopic}from "./load.js";
 
 const container = document.querySelector('.container');
 const section = document.querySelector('.theme-content');
 const themeTitle = document.querySelector('.theme-title');
-const theme = document.querySelector('.theme-name-wrapper');
-const comments = document.querySelector('.comment');
-const form = document.querySelector('.answer-comment form');
-const postButton = document.querySelector('.user-comment');
-
+const header = document.querySelector('.header');
+const userComment = document.querySelector('#user-comment');
 const topics = document.querySelector('.topic-container');
 
 section.remove();
@@ -51,31 +47,32 @@ export function createTopicDetailsHTML(topic) {
     htmlGenerator('h2', title, '', divThemeName);
 
     // topic header 
-    comments.replaceChildren();
-    const divHeader = htmlGenerator('div', '', 'header', comments);
-    const img = htmlGenerator('img', '', '', divHeader);
+    header.replaceChildren();
+    const img = htmlGenerator('img', '', '', header);
     img.setAttribute('src', './static/profile.png');
     img.setAttribute('alt', 'avatar');
 
-    const p = htmlGenerator('p', '', '', divHeader);
+    const p = htmlGenerator('p', '', '', header);
     p.innerHTML = `<span>${username}</span> posted on <time>${date}</time>`
-    htmlGenerator('p', post, 'post-content', divHeader);
+    htmlGenerator('p', post, 'post-content', header);
 
     return divThemeTitle;
 }
 
 export function createUserCommentHTML(comment) {
-    const divUserComment = htmlGenerator('div', '', 'user-comment', comments);
-    const divTopicNameWrapper = htmlGenerator('div', '', 'topic-name-wrapper', divUserComment);
+    const { content, username, postId, date, _id } = comment;
+
+    const divTopicNameWrapper = htmlGenerator('div', '', 'topic-name-wrapper', userComment);
 
     const divTopicName = htmlGenerator('div', '', 'topic-name', divTopicNameWrapper);
     const p2 = htmlGenerator('p', '', '', divTopicName);
-    p2.innerHTML = `<strong>${comment.username}</strong> commented on <time>${comment.date}</time>`;
+    p2.innerHTML = `<strong>${username}</strong> commented on <time>${date}</time>`;
+
     const divPostContent = htmlGenerator('div', '', 'post-content', divTopicName);
-    htmlGenerator('p', comment.content, '', divPostContent);
+    htmlGenerator('p', content, '', divPostContent);
 }
 
-export function htmlGenerator(type, text, className, parent) {
+function htmlGenerator(type, text, className, parent) {
     const element = document.createElement(type);
     element.textContent = text;
 
