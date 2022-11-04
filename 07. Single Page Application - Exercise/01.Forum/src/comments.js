@@ -1,48 +1,60 @@
-import { htmlGenerator } from "./dom.js";
+import { createUserCommentHTML } from "./dom.js";
 
-export async function showComments(post) {
-    console.log(post);
-    const container = document.querySelector('.container');
-    container.replaceChildren();
+const form = document.querySelector('.answer-comment form');
 
-    const comments = document.querySelector('.theme-content');
-    comments.style.display = 'block';
+let topicId;
 
+export async function getComments(id) {
+    topicId = id
+    try {
+        const response = await fetch(`http://localhost:3030/jsonstore/collections/myboard/comments`);
+        const allComments = await response.json();
 
-    // topic
-    const divThemeTitle = htmlGenerator('div', '', 'theme-title', document.querySelector('.theme-content'));
-    const divThemeNameWrapper = htmlGenerator('div', '', 'theme-name-wrapper', divThemeTitle);
-    const divThemeName = htmlGenerator('div', '', 'theme-name', divThemeNameWrapper);
-    htmlGenerator('h2', post.title, '', divThemeName);
+        if (!response.ok) {
+            throw new Error(response.message);
+        }
 
+        Object.values(allComments)
+            .filter(c => c.postId === topicId)
+            .map(c => {
+                createUserCommentHTML(c);
+            });
 
-    // comment header 
-    const divHeader = htmlGenerator('div', '', 'header', document.querySelector('.comment'));
-    const img = htmlGenerator('img','', '', divHeader);
-    img.setAttribute('src', './static/profile.png');
-    img.setAttribute('alt', 'avatar');
+    } catch (error) {
+        alert(error.message);
+    }
+}
 
-    const p = htmlGenerator('p', '', '', divHeader); 
-    p.innerHTML = `<span>${post.username}</span> posted on <time>${post.date}</time>`
-    htmlGenerator('p', post.post, 'post-content', divHeader); 
+form.addEventListener('submit', getCommentData);
 
-    const response = await fetch('http://localhost:3030/jsonstore/collections/myboard/comments');
-    const data = await response.json();
-    console.log(data);
+async function getCommentData(e) {
+    e.preventDefault();
 
+    const dataForm = new FormData(e.target);
+    const content = dataForm.get('postText');
+    const username = dataForm.get('username');
 
-    //  comment body <=============
-    const divUserComment = htmlGenerator('div', '', 'user-comment', document.querySelector('.comment'));
-    const divTopicNameWrapper = htmlGenerator('div', '', 'topic-name-wrapper', divUserComment);
-    const divTopicName = htmlGenerator('div', '', 'topic-name', divTopicNameWrapper);
-    const p2 = htmlGenerator('p', '', '', divTopicName); 
-    p2.innerHTML = `<strong>${data.username}</strong> commented on <time>${data.date}</time>`;
-    const divPostContent = htmlGenerator('div', '', 'post-content', divPostContent);
-    // const pPostContent = htmlGenerator('p', data.content, '', divPostContent);
+    if (!content || !username) {
+        alert('All fields are required!');
+        return;
+    }
+    createComment(content, username);
+    form.reset();
+}
 
+async function createComment(content, username) {
 
+    const res = await fetch('http://localhost:3030/jsonstore/collections/myboard/comments', {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({
+            content,
+            username,
+            postId: topicId,
+            date: new Date
+        })
+    });
+    const comm = await res.json();
 
-
-
-
+    getComments(topicId);
 }
