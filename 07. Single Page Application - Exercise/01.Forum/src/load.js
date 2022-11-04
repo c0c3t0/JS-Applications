@@ -1,7 +1,5 @@
-import { createTopicHTML } from './dom.js';
-import { createTopicDetailsHTML } from './dom.js';
+import { createTopicHTML, createTopicDetailsHTML } from './dom.js';
 import { getComments } from './comments.js';
-
 
 const topics = document.querySelector('.topic-container');
 
@@ -26,19 +24,19 @@ export async function getTopics() {
     }
 }
 
-export async function showSelectedTopic(id) {
-    // try {
-    const response = await fetch(`http://localhost:3030/jsonstore/collections/myboard/posts/${id}`);
-    const data = await response.json();
+async function showSelectedTopic(id) {
+    try {
+        const response = await fetch(`http://localhost:3030/jsonstore/collections/myboard/posts/${id}`);
+        const data = await response.json();
 
-    if (!response.ok) {
-        throw new Error(response.message);
+        if (!response.ok) {
+            throw new Error(response.message);
+        }
+
+        const topic = createTopicDetailsHTML(data);
+        getComments(topic.id);
+
+    } catch (error) {
+        alert(error.message);
     }
-    const topic = createTopicDetailsHTML(data);
-    getComments(topic.id);
-
-
-    // } catch (error) {
-    //     alert(error.message);
-    // }
 }
