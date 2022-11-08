@@ -6,7 +6,7 @@ const movieSection = homePageSection.querySelector('#movie');
 
 export async function getAllMovies() {
     try {
-        const response = await fetch('http://localhost:3030/data/movies')
+        const response = await fetch('http://localhost:3030/data/movies');
         const data = await response.json();
 
         if (!response.ok) {
