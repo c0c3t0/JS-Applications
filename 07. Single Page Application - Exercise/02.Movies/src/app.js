@@ -1,9 +1,9 @@
+import { getAllMovies } from './catalog.js';
+import { showCreateMovie } from './create.js';
 import { showSection } from './dom.js';
 import { showLogin } from './login.js';
 import { logout } from './logout.js';
 import { showRegister } from './register.js';
-import { getAllMovies } from './catalog.js';
-import { showCreateMovie } from './create.js';
 
 window.addEventListener('load', showHome);
 
