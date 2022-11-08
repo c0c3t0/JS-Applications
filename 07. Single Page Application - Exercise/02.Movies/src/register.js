@@ -21,6 +21,10 @@ async function registerUser(e) {
         alert('All fields are required!');
         return;
     }
+    if (password.length < 6) {
+        alert('Password should be at least 6 charecters long!');
+        return;
+    }
     if (password !== repeatPassword) {
         alert('Passwords don\'t match');
         return;
@@ -49,6 +53,7 @@ async function registerUser(e) {
         sessionStorage.setItem('userEmail', data.email);
 
         showHome();
+        registerForm.reset();
 
     } catch (error) {
         alert(error.message);
