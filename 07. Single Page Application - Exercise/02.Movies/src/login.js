@@ -43,6 +43,7 @@ async function loginUser(e) {
         sessionStorage.setItem('userEmail', data.email);
 
         showHome();
+        loginForm.reset();
 
     } catch (error) {
         alert(error.message);
