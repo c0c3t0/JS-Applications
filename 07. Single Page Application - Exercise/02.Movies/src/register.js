@@ -44,7 +44,7 @@ async function registerUser(e) {
         const data = await response.json();
         
         if (!response.ok) {
-            form.reset();
+            registerForm.reset();
             throw new Error(data.message);
         }
 
