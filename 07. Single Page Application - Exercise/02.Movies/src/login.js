@@ -33,9 +33,11 @@ async function loginUser(e) {
             })
         });
         const data = await response.json();
+        
         if (!response.ok) {
-            form.reset();
-            throw new Error(response.message);
+            alert('Invalid credentials!');
+            loginForm.reset();
+            return;
         }
 
         sessionStorage.setItem('accessToken', data.accessToken);
