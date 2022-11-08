@@ -1,4 +1,6 @@
-import { showHome } from "./app.js";
+import { showLogin } from "./login.js";
+
+const nav = document.querySelector('nav');
 
 export async function logout() {
     try {
@@ -10,15 +12,18 @@ export async function logout() {
         });
 
         if (response.ok) {
-            sessionStorage.removeItem('accessToken');
-            sessionStorage.removeItem('userId');
-            sessionStorage.removeItem('userEmail');
-            showHome();
-        } else {
-            throw new Error(await response.json());
-        }
+            sessionStorage.clear();
+            showLogin();
 
+            [...nav.querySelectorAll('.user')].map(el => { el.style.display = 'none' });
+            [...nav.querySelectorAll('.guest')].map(el => { el.style.display = 'block' });
+
+        } else {
+            const data = await response.json();
+            throw new Error(data.message);
+        }
+        
     } catch (error) {
-        alert(error.message)
+        alert(error)
     }
 }
