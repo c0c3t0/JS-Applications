@@ -1,8 +1,9 @@
 import { showHome } from "./app.js";
 
-export async function deleteMovie(id) {
+export async function deleteMovie(e) {
     const token = sessionStorage.getItem('accessToken');
-
+    console.log(e.target.id);
+    let id = e.target.id
     try {
         const response = await fetch(`http://localhost:3030/data/movies/${id}`, {
             method: 'DELETE',
