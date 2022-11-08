@@ -1,6 +1,7 @@
 import { htmlGenerator, showSection } from "./dom.js";
 import { deleteMovie } from "./delete.js";
 import { showEdit } from "./edit.js";
+import { likeMovie, dislikeMovie, counterLikes, isMovieLiked } from "./likes.js";
 
 const sections = document.querySelectorAll('.view-section');
 
@@ -11,9 +12,12 @@ export function showDetails(id) {
 
 export async function movieDetails(id) {
     const userId = sessionStorage.getItem('userId');
+
     try {
         const response = await fetch(`http://localhost:3030/data/movies/${id}`);
         const data = await response.json();
+        const isLiked = await isMovieLiked(id, userId);
+        const totalLikes = await counterLikes(data._id);
 
         if (!response.ok) {
             throw new Error(response.message);
@@ -37,18 +41,30 @@ export async function movieDetails(id) {
             const anchorDelete = htmlGenerator('a', 'Delete', 'btn btn-danger', divCol4);
             anchorDelete.setAttribute('href', '#');
             anchorDelete.setAttribute('id', id);
-            anchorDelete.addEventListener('click', () => deleteMovie(data._id));
+            anchorDelete.addEventListener('click', deleteMovie);
 
             const anchorEdit = htmlGenerator('a', 'Edit', 'btn btn-warning', divCol4);
             anchorEdit.setAttribute('href', '#');
             anchorEdit.setAttribute('id', id);
             anchorEdit.addEventListener('click', () => showEdit(data));
 
-        } else {
-            htmlGenerator('a', 'Like', 'btn btn-primary', divCol4);
-            htmlGenerator('span', `Liked: ${data}`, 'enrolled-span', divCol4);
-        }
+        } else if (userId != null && data._ownerId !== userId) {
+            const likeBtn = htmlGenerator('a', '', '', divCol4);
+            likeBtn.setAttribute('href', '#');
 
+            if (isLiked.length > 0) {
+                likeBtn.textContent = 'Dislike';
+                likeBtn.className = 'btn btn-danger';
+                likeBtn.addEventListener('click', async () => dislikeMovie(data._id, isLiked[0]._id));
+
+            } else {
+                likeBtn.textContent = 'Like';
+                likeBtn.className = 'btn btn-primary';
+                likeBtn.addEventListener('click', () => likeMovie(data._id));
+            }
+        }
+        htmlGenerator('span', `Liked: ${totalLikes}`, 'enrolled-span', divCol4);
+        
     } catch (error) {
         alert(error.message);
     }
