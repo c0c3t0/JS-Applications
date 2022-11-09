@@ -8,20 +8,20 @@ export function getFormData(e) {
     const dataForm = new FormData(e.target);
     const title = dataForm.get('topicName');
     const username = dataForm.get('username');
-    const post = dataForm.get('postText');
+    const content = dataForm.get('postText');
 
     if (e.submitter.textContent === 'Post') {
-        if (!title || !username || !post) {
+        if (!title || !username || !content) {
             alert('All fields are required!');
             return;
         }
-        createTopic(title, username, post);
+        createTopic(title, username, content);
     }
     form.reset();
 }
 
 
-async function createTopic(title, username, post) {
+async function createTopic(title, username, content) {
     try {
         const response = await fetch('http://localhost:3030/jsonstore/collections/myboard/posts', {
             method: 'POST',
@@ -29,10 +29,11 @@ async function createTopic(title, username, post) {
             body: JSON.stringify({
                 title,
                 username,
-                post,
+                content,
                 date: new Date
             })
         });
+
 
         if (!response.ok) {
             const data = await response.json();
