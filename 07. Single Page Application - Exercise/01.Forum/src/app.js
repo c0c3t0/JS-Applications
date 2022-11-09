@@ -1,5 +1,3 @@
-// ======> 87/100 <======
-
 import { getTopics } from './load.js';
 import { getFormData} from './create.js';
 
