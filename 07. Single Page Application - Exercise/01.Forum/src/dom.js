@@ -6,6 +6,7 @@ const themeTitle = document.querySelector('.theme-title');
 const header = document.querySelector('.header');
 const userComment = document.querySelector('#user-comment');
 const topics = document.querySelector('.topic-container');
+const topicName = document.querySelector('.topic-name');
 
 section.remove();
 
@@ -62,13 +63,13 @@ export function createTopicDetailsHTML(topic) {
 export function createUserCommentHTML(comment) {
     const { content, username, postId, date, _id } = comment;
 
-    const divTopicNameWrapper = htmlGenerator('div', '', 'topic-name-wrapper', userComment);
+    // const divTopicNameWrapper = htmlGenerator('div', '', 'topic-name-wrapper', userComment);
 
-    const divTopicName = htmlGenerator('div', '', 'topic-name', divTopicNameWrapper);
-    const p2 = htmlGenerator('p', '', '', divTopicName);
+    // const divTopicName = htmlGenerator('div', '', 'topic-name', divTopicNameWrapper);
+    const p2 = htmlGenerator('p', '', '', topicName);
     p2.innerHTML = `<strong>${username}</strong> commented on <time>${date}</time>`;
 
-    const divPostContent = htmlGenerator('div', '', 'post-content', divTopicName);
+    const divPostContent = htmlGenerator('div', '', 'post-content', topicName);
     htmlGenerator('p', content, '', divPostContent);
 }
 

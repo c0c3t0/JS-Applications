@@ -1,9 +1,9 @@
 const { chromium } = require('playwright-chromium');
 const { expect } = require('chai');
 
-const host = 'http://localhost:3000'; // Application host (NOT service host - that can be anything)
+const host = 'http://localhost:5500'; // Application host (NOT service host - that can be anything)
 const interval = 300;
-const DEBUG = false;
+const DEBUG = true;
 const slowMo = 500;
 
 const mockData = {
@@ -87,7 +87,7 @@ describe('E2E tests', function () {
       expect(form.length).to.be.equal(data.length);
     });
 
-    it('Create post', async () => {
+    it.only('Create post', async () => {
       const data = mockData.posts[0];
       const { post } = await handle(endpoints.create);
       const { onRequest } = post();
@@ -101,9 +101,11 @@ describe('E2E tests', function () {
       const [request] = await Promise.all([onRequest(), page.click('.public')]);
 
       const postData = JSON.parse(request.postData());
+      // expect(request.postData()).to.equal('neshto')
       expect(postData.title).to.equal(data.title);
+      expect(postData.content).to.equal(data.content);
       expect(postData.username).to.equal(data.username);
-      expect(postData.content).to.contains(data.content);
+
     });
 
     it('Check post title', async () => {

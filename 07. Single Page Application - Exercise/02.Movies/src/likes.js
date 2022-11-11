@@ -49,5 +49,6 @@ export async function counterLikes(movieId) {
         }
     });
 
-    return response.json();
+    const data = await response.json();
+    return data;
 }

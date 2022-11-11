@@ -14,7 +14,7 @@ async function registerUser(e) {
     let rePass = formData.get('rePass');
 
     if (password !== rePass) {
-        notification.textContent = 'Passwords didn\'t match';
+        notification.textContent = 'Passwords don\'t match';
         return;
     }
     if (!email || !password || !rePass) {

@@ -12,6 +12,7 @@ export function showDetails(id) {
 
 export async function movieDetails(id) {
     const userId = sessionStorage.getItem('userId');
+    const token = sessionStorage.getItem('accessToken');
 
     try {
         const response = await fetch(`http://localhost:3030/data/movies/${id}`);
@@ -37,21 +38,30 @@ export async function movieDetails(id) {
         htmlGenerator('h3', 'Movie Description', 'my-3', divCol4);
         htmlGenerator('p', data.description, '', divCol4);
 
-        if (userId != null && data._ownerId === userId) {
-            const anchorDelete = htmlGenerator('a', 'Delete', 'btn btn-danger', divCol4);
-            anchorDelete.setAttribute('href', '#');
-            anchorDelete.setAttribute('id', id);
-            anchorDelete.addEventListener('click', deleteMovie);
+        const anchorDelete = htmlGenerator('a', 'Delete', 'btn btn-danger', divCol4);
+        anchorDelete.setAttribute('href', '#');
+        anchorDelete.setAttribute('id', id);
+        anchorDelete.addEventListener('click', deleteMovie);
+        anchorDelete.style.visibility = 'hidden';
 
-            const anchorEdit = htmlGenerator('a', 'Edit', 'btn btn-warning', divCol4);
-            anchorEdit.setAttribute('href', '#');
-            anchorEdit.setAttribute('id', id);
-            anchorEdit.addEventListener('click', () => showEdit(data));
+        const anchorEdit = htmlGenerator('a', 'Edit', 'btn btn-warning', divCol4);
+        anchorEdit.setAttribute('href', '#');
+        anchorEdit.setAttribute('id', id);
+        anchorEdit.addEventListener('click', () => showEdit(data));
+        anchorEdit.style.visibility = 'hidden';
 
-        } else if (userId != null && data._ownerId !== userId) {
-            const likeBtn = htmlGenerator('a', '', '', divCol4);
-            likeBtn.setAttribute('href', '#');
+        const likeBtn = htmlGenerator('a', '', '', divCol4);
+        likeBtn.setAttribute('href', '#');
+        likeBtn.style.visibility = 'hidden';
 
+        htmlGenerator('span', `Liked ${totalLikes}`, 'enrolled-span', divCol4);
+        
+        if (userId !== null && data._ownerId === userId) {
+            anchorDelete.style.visibility = 'visible';
+            anchorEdit.style.visibility = 'visible';
+        }
+
+        if (userId !== null && data._ownerId !== userId) {
             if (isLiked.length > 0) {
                 likeBtn.textContent = 'Dislike';
                 likeBtn.className = 'btn btn-danger';
@@ -62,9 +72,11 @@ export async function movieDetails(id) {
                 likeBtn.className = 'btn btn-primary';
                 likeBtn.addEventListener('click', () => likeMovie(data._id));
             }
+
+            likeBtn.style.visibility = 'visible';
         }
-        htmlGenerator('span', `Liked: ${totalLikes}`, 'enrolled-span', divCol4);
-        
+
+
     } catch (error) {
         alert(error.message);
     }

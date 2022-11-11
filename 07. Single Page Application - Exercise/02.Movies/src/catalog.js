@@ -16,7 +16,8 @@ export async function getAllMovies() {
         movieSection.replaceChildren();
         const divMt3 = htmlGenerator('div', '', 'mt-3', movieSection);
         const divRow = htmlGenerator('div', '', 'row d-flex d-wrap', divMt3);
-        const divCardDeck = htmlGenerator('div', '', 'card-deck d-flex justify-content-center', divRow);
+        const divCardDeck = htmlGenerator('ul', '', 'card-deck d-flex justify-content-center', divRow);
+        divCardDeck.id = 'movies-list';
 
         Object.values(data)
             .forEach(info => {
@@ -32,7 +33,7 @@ export async function getAllMovies() {
                 //         </div>
                 //     </div>
 
-                const divCard = htmlGenerator('div', '', 'card mb-4', divCardDeck);
+                const divCard = htmlGenerator('li', '', 'card mb-4', divCardDeck);
 
                 const img = htmlGenerator('img', '', 'card-img-top', divCard);
                 img.setAttribute('src', info.img);
@@ -50,9 +51,6 @@ export async function getAllMovies() {
                 detailsBtn.type = 'button';
                 detailsBtn.setAttribute('id', info._id);
 
-                if (!sessionStorage.getItem('accessToken')) {
-                    detailsBtn.setAttribute('disabled', 'disabled');
-                }
                 detailsBtn.addEventListener('click', () => showDetails(info._id));
             });
 
