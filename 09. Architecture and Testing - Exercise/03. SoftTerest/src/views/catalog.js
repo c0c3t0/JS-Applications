@@ -10,7 +10,6 @@ export function showCatalog(context) {
 
 async function loadIdeas() {
     const ideas = await getIdeas();
-
     if (ideas.length === 0) {
         section.replaceChildren(htmlGenerator('h1', section, 'No ideas yet! Be the first one :)'));
     } else {
@@ -32,5 +31,5 @@ function createIdeaCard(idea) {
 
     const a = htmlGenerator('a', div, 'Details', 'btn');
 
-    return div
+    return div;
 }
