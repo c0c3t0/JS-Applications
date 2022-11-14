@@ -1,3 +1,4 @@
+import { logout } from "./src/api/user.js";
 import { router } from "./src/router.js";
 import { showCatalog } from "./src/views/catalog.js";
 import { showCreate } from "./src/views/create.js";
@@ -13,7 +14,10 @@ const links = {
     '/create': showCreate,
     '/catalog': showCatalog,
     '/details': showDetails,
-    // '/logout': showLogout,
+    '/logout': async function () {
+        await logout();
+        onLoad.goTo('/');
+    },
 }
 
 const onLoad = router(links);
