@@ -16,6 +16,7 @@ export function router(links) {
 
     function showSection(section) {
         main.replaceChildren(section);
+        updateNavigation();
     }
 
     function onNavigate(e) {
@@ -35,6 +36,16 @@ export function router(links) {
 
         if (typeof handler === 'function') {
             handler(context);
+        }
+    }
+
+    function updateNavigation() {
+        if (sessionStorage.getItem('user')) {
+            [...nav.querySelectorAll('.user')].map(e => e.style.display = 'block');
+            [...nav.querySelectorAll('.guest')].map(e => e.style.display = 'none');
+        } else {
+            [...nav.querySelectorAll('.user')].map(e => e.style.display = 'none');
+            [...nav.querySelectorAll('.guest')].map(e => e.style.display = 'block');
         }
     }
 }
