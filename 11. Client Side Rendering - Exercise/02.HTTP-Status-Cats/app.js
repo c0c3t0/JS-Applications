@@ -34,9 +34,9 @@ function showDetails(e) {
 
     if (details.style.display === 'block') {
         details.style.display = 'none';
-        button.textContent = 'Hide status code';
+        button.textContent = 'Show status code';
     } else {
         details.style.display = 'block';
-        button.textContent = 'Show status code';
+        button.textContent = 'Hide status code';
     };
 }
