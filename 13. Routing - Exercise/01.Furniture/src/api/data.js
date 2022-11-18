@@ -1,24 +1,41 @@
 import * as api from "./api.js";
 
 
-const endpoints = {
-    'getIdeas': 'data/ideas?select=_id%2Ctitle%2Cimg&sortBy=_createdOn%20desc',
-    'createIdea': 'data/ideas',
-    'ideaById': 'data/ideas/',
+const endpoint = {
+    'catalog': 'data/catalog',
+    'getById': 'data/catalog/:id',
+    'getMyItems': 'data/catalog?where=_ownerId%3D%22',
 }
 
-export async function getIdeas(){
-    return api.get(endpoints.getIdeas);
+export async function createItem(data){
+    const result = await api.post(endpoint.catalog, data);
+    return result;
 }
 
-export async function createIdea(data){
-    return api.post(endpoints.createIdea, data);
+export async function getAllItems(){
+    const result = await api.get(endpoint.catalog);
+    return result;
 }
 
-export async function getIdeaById(id) {
-    return api.get(endpoints.ideaById + id);
+export async function getById(id){
+    const result = await api.get(endpoint.getById + id);
+    return result;
 }
 
-export async function deleteIdea(id) {
-    return api.del(endpoints.ideaById + id);
+export async function updateById(id, data){
+    const result = await api.put(endpoint.getById + id, data);
+    return result;
+}
+
+export async function deleteById(id){
+    const result = await api.del(endpoint.getById + id);
+    return result;
+}
+
+export async function getMyItems(id){
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const userId = user && user._id;
+    const id = `${userId}%22`;
+    const result = await api.get(endpoint.getMyItems + id);
+    return result;
 }
