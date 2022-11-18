@@ -1,4 +1,5 @@
-import { page } from './lit.js';
+import { logout } from './api/user.js';
+import { page, render } from './lit.js';
 import { showCatalog } from './views/catalog.js';
 import { showCreate } from './views/create.js';
 import { showDetails } from './views/details.js';
@@ -7,18 +8,30 @@ import { showHome } from './views/home.js';
 import { showLogin } from './views/login.js';
 import { showRegister } from './views/register.js';
 
+const root = document.querySelector('.container');
+document.getElementById('logoutBtn').addEventListener('click', onLogout);
 
-page('/index', '/');
-page('/', showHome);
+page('/index', renderer, '/');
+page('/', renderer, showHome);
 
-page('/login', showLogin);
-page('/register', showRegister);
+page('/login', renderer, showLogin);
+page('/register', renderer, showRegister);
 
-page('/catalog', showCatalog);
-page('/create', showCreate);
-page('/details/:id', showDetails);
-page('/edit/:id', showEdit);
-// page('/my-furniture', showMyFurniture);
+page('/catalog', renderer, showCatalog);
+page('/create', renderer, showCreate);
+page('/details/:id', renderer, showDetails);
+page('/edit/:id', renderer, showEdit);
+// page('/my-furniture', renderer, showMyFurniture);
 
-page.start(); 
+page.start();
 
+function renderer(ctx, next) {
+    ctx.render = (content) => render(content, root);
+    next();
+}
+
+function onLogout() {
+    logout();
+    // updateUserNav();
+    page.redirect('/');
+}
