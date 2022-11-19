@@ -3,7 +3,7 @@ import * as api from "./api.js";
 
 const endpoint = {
     'catalog': 'data/catalog',
-    'getById': 'data/catalog/:id',
+    'getById': 'data/catalog/',
     'getMyItems': 'data/catalog?where=_ownerId%3D%22',
 }
 
@@ -32,7 +32,7 @@ export async function deleteById(id){
     return result;
 }
 
-export async function getMyItems(id){
+export async function getMyItems(){
     const user = JSON.parse(sessionStorage.getItem('user'));
     const userId = user && user._id;
     const id = `${userId}%22`;
