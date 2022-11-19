@@ -11,27 +11,41 @@ import { showRegister } from './views/register.js';
 const root = document.querySelector('.container');
 document.getElementById('logoutBtn').addEventListener('click', onLogout);
 
-page('/index', renderer, '/');
-page('/', renderer, showHome);
+page(decorateContext)
+page('/index', '/');
+page('/', showHome);
 
-page('/login', renderer, showLogin);
-page('/register', renderer, showRegister);
+page('/login', showLogin);
+page('/register', showRegister);
 
-page('/catalog', renderer, showCatalog);
-page('/create', renderer, showCreate);
-page('/details/:id', renderer, showDetails);
-page('/edit/:id', renderer, showEdit);
-// page('/my-furniture', renderer, showMyFurniture);
+page('/catalog', showCatalog);
+page('/create', showCreate);
+page('/details/:id', showDetails);
+page('/edit/:id', showEdit);
+// page('/my-furniture', showMyFurniture);
 
 page.start();
+updateNavigation();
 
-function renderer(ctx, next) {
+function decorateContext(ctx, next) {
+    ctx.updateNavigation = updateNavigation;
     ctx.render = (content) => render(content, root);
     next();
+}
+ 
+function updateNavigation() {
+    const user = sessionStorage.getItem('user');
+    if (user) {
+        document.querySelector('#user').style.display = 'inline-block';
+        document.querySelector('#guest').style.display = 'none';
+    } else {
+        document.querySelector('#user').style.display = 'none';
+        document.querySelector('#guest').style.display = 'inline-block';
+    }
 }
 
 function onLogout() {
     logout();
-    // updateUserNav();
+    updateNavigation();
     page.redirect('/');
 }
