@@ -1,29 +1,7 @@
 import { html } from '../lit.js';
 import { login } from '../api/user.js';
 
-let page;
-
-export function showLogin(ctx) {
-    page = ctx.page;
-    ctx.render(loginTemplate());
-}
-
-function getFormData(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const { email, password } = Object.fromEntries(formData);
-    if (!email || !password) {
-        alert('All fields are required!');
-        return;
-    }
-
-    login(email, password);
-    e.target.reset();
-    page.redirect('/catalog');
-}
-
-function loginTemplate() {
-    return html`
+const loginTemplate = html`
     <div class="row space-top">
         <div class="col-md-12">
             <h1>Login User</h1>
@@ -45,4 +23,25 @@ function loginTemplate() {
             </div>
         </div>
     </form>`;
+
+let ctx = null;
+
+export function showLogin(context) {
+    ctx = context;
+    ctx.render(loginTemplate);
+}
+
+async function getFormData(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const { email, password } = Object.fromEntries(formData);
+    if (!email || !password) {
+        alert('All fields are required!');
+        return;
+    }
+
+    await login(email, password);
+    e.target.reset();
+    ctx.updateNavigation();
+    ctx.page.redirect('/catalog');
 }
