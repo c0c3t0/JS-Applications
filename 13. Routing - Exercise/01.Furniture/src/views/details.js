@@ -25,7 +25,7 @@ const detailsTemplate = (data, isOwner) => html`
         ${isOwner
         ? html`
         <div>
-            <a href=”#” class="btn btn-info">Edit</a>
+            <a href=/edit/${data._id} class="btn btn-info">Edit</a>
             <a href=”#” @click=${deleteItem} class="btn btn-red">Delete</a>
         </div>`
         : nothing}
