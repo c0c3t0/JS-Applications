@@ -4,16 +4,16 @@ import { showCatalog } from './views/catalog.js';
 import { showCreate } from './views/create.js';
 import { showDetails } from './views/details.js';
 import { showEdit } from './views/edit.js';
-import { showHome } from './views/home.js';
 import { showLogin } from './views/login.js';
+import { showMyFurniture } from './views/ownerCatalog.js';
 import { showRegister } from './views/register.js';
 
 const root = document.querySelector('.container');
 document.getElementById('logoutBtn').addEventListener('click', onLogout);
 
 page(decorateContext)
-page('/index', '/');
-page('/', showHome);
+page('/index', '/catalog');
+page('/', showCatalog);
 
 page('/login', showLogin);
 page('/register', showRegister);
@@ -22,7 +22,7 @@ page('/catalog', showCatalog);
 page('/create', showCreate);
 page('/details/:id', showDetails);
 page('/edit/:id', showEdit);
-// page('/my-furniture', showMyFurniture);
+page('/my-furniture', showMyFurniture);
 
 page.start();
 updateNavigation();
