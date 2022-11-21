@@ -7,6 +7,7 @@ import { showEdit } from './views/edit.js';
 import { showLogin } from './auth/login.js';
 import { showRegister } from './auth/register.js';
 import { showHome } from './views/home.js';
+import { showSearch } from './views/search.js';
 
 const nav = document.querySelector('nav');
 const root = document.querySelector('main');
@@ -23,6 +24,7 @@ page('/dashboard', showDashboard);
 page('/create', showCreate);
 page('/details/:id', showDetails);
 page('/edit/:id', showEdit);
+page('/search', showSearch);
 
 page.start();
 updateNavigation();
