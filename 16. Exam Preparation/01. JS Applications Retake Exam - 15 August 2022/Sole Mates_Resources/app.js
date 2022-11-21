@@ -1,34 +1,28 @@
 import { logout } from './api/user.js';
 import { page, render } from './lit.js';
-// import { showDashboard } from './views/dashboard.js';
-// import { showCreate } from './views/create.js';
-// import { showDetails } from './views/details.js';
-// import { showEdit } from './views/edit.js';
+import { showDashboard } from './views/dashboard.js';
+import { showCreate } from './views/create.js';
+import { showDetails } from './views/details.js';
+import { showEdit } from './views/edit.js';
 import { showLogin } from './auth/login.js';
-// import { showMyFurniture } from './views/ownerCatalog.js';
 import { showRegister } from './auth/register.js';
-
-//===============> CHANGES NEED TO BE MADE <===============
-// [x] paths in page;
-// [x] navigation;
+import { showHome } from './views/home.js';
 
 const nav = document.querySelector('nav');
 const root = document.querySelector('main');
-// nav.getElementById('logoutBtn').addEventListener('click', onLogout);
 
 page(decorateContext);
-// page('/index', '/');
-// page('/', showDashboard);
+page('/index', '/');
+page('/', showHome);
 
 page('/login', showLogin);
 page('/register', showRegister);
 page('/logout', onLogout);
 
-// page('/catalog', showCatalog);
-// page('/create', showCreate);
-// // page('/details/:id', showDetails);
-// // page('/edit/:id', showEdit);
-// // page('/my-furniture', showMyFurniture);
+page('/dashboard', showDashboard);
+page('/create', showCreate);
+page('/details/:id', showDetails);
+page('/edit/:id', showEdit);
 
 page.start();
 updateNavigation();
