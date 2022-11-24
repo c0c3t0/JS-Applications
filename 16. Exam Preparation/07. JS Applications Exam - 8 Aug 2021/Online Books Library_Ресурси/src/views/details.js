@@ -39,12 +39,12 @@ export async function showDetails(context) {
     const bookId = ctx.params.id;
     const data = await getById(bookId);
     const totalCount = await getTotalCount(bookId);
-    console.log(totalCount);
 
 
     const user = JSON.parse(sessionStorage.getItem('user'));
     const isOwner = user ? user._id === data._ownerId : false;
     const isLogged = !user ? false : true;
+    let hasLiked = 0;
 
     if (isLogged && !isOwner) {
         hasLiked = await liked(bookId, user._id);
