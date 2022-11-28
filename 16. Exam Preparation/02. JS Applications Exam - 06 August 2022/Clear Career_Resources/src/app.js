@@ -11,7 +11,7 @@ import { showHome } from './views/home.js';
 const root = document.querySelector('main');
 
 page(decorateContext)
-page('/index', '/');
+page('/index.html', '/');
 page('/', showHome);
 
 page('/login', showLogin);
