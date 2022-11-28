@@ -341,7 +341,7 @@ describe('E2E tests', function () {
 
       expect(title).to.contains(data.title);
       expect(image[0]).to.contains(data.imageUrl);
-      expect(description[0]).to.contains(`Description: ${data.description}`);
+      expect(description).to.contains(`Description: ${data.description}`);
       expect(address).to.contains(`Address: ${data.address}`);
       expect(phone[0]).to.contains(`Phone number: ${data.phone}`);
     });
