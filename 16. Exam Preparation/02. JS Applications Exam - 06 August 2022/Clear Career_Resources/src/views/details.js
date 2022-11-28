@@ -1,7 +1,7 @@
 import { applied, apply, deleteById, getById, getTotalCount } from '../api/data.js';
 import { html, nothing } from '../lit.js';
 
-const detailsTemplate = (data, isOwner, isLogged, hasApplied, onApply, totalCount) => html`
+const detailsTemplate = (data, isOwner, isLogged, hasApplied, totalCount) => html`
 <section id="details">
     <div id="details-wrapper">
         <img id="details-img" src=${data.imageUrl} alt="example1" />
@@ -25,17 +25,17 @@ const detailsTemplate = (data, isOwner, isLogged, hasApplied, onApply, totalCoun
         <p>Applications: <strong id="applications">${totalCount}</strong></p>
 
         <div id="action-buttons">
-            ${isOwner
-        ? html`
+        ${isOwner
+            ? html`
             <a href="/edit/${data._id}" id="edit-btn">Edit</a>
             <a @click=${deleteItem} href="#" id="delete-btn">Delete</a>`
         : nothing}
-            ${isLogged && !isOwner && hasApplied == 0 ? html`<a @click=${onApply} href="#" id="apply-btn">Apply</a>` :
-            nothing}
+        ${isLogged && !isOwner && hasApplied == 0 
+            ? html`<a @click=${onApply} href="#" id="apply-btn">Apply</a>` 
+        : nothing}
         </div>
     </div>
-    </div>
-`;
+</section>`;
 
 let ctx = null;
 
@@ -54,16 +54,14 @@ export async function showDetails(context) {
         hasApplied = await applied(offerId, user._id);
     }
 
-    ctx.render(detailsTemplate(data, isOwner, isLogged, hasApplied, onApply, totalCount));
+    ctx.render(detailsTemplate(data, isOwner, isLogged, hasApplied, totalCount));
+}
 
-    async function onApply(e) {
-        e.preventDefault();
-        await apply({ offerId });
-        const totalCount = await getTotalCount(offerId);
-        hasApplied = await applied(offerId, user._id);
-
-        ctx.render(detailsTemplate(data, isOwner, isLogged, hasApplied, onApply, totalCount));
-    }
+async function onApply(e) {
+    e.preventDefault();
+    const offerId = ctx.params.id;
+    await apply({ offerId });
+    ctx.page.redirect(`/details/${ctx.params.id}`)
 }
 
 async function deleteItem(e) {
