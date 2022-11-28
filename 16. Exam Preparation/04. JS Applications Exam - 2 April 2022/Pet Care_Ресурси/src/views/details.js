@@ -1,7 +1,7 @@
 import { deleteById, donate, getById, getTotalCount, isDonate } from '../api/data.js';
 import { html, nothing } from '../lit.js';
 
-const detailsTemplate = (data, isOwner, isLogged, hasDonate, onDonate, totalCount) => html`
+const detailsTemplate = (data, isOwner, isLogged, hasDonate, totalCount) => html`
 <section id="detailsPage">
     <div class="details">
         <div class="animalPic">
@@ -47,16 +47,14 @@ export async function showDetails(context) {
 
     }
 
-    ctx.render(detailsTemplate(data, isOwner, isLogged, hasDonate, onDonate, totalCount));
+    ctx.render(detailsTemplate(data, isOwner, isLogged, hasDonate, totalCount));
+}
 
-    async function onDonate(e) {
-        e.preventDefault();
-        const res = await donate({ petId });
-        const totalCount = await getTotalCount(petId);
-        hasDonate = await isDonate(petId, user._id);
-
-        ctx.render(detailsTemplate(data, isOwner, isLogged, hasDonate, onDonate, totalCount));
-    }
+async function onDonate(e) {
+    e.preventDefault();
+    const petId = ctx.params.id;
+    await donate({ petId });
+    ctx.page.redirect(`/details/${petId}`);
 }
 
 async function deleteItem(e) {
