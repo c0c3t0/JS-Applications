@@ -51,7 +51,6 @@ export async function showDetails(context) {
     }
 
     ctx.render(detailsTemplate(data, isOwner, isLogged, hasLiked, totalCount));
-
 }
 
 async function onLike() {
