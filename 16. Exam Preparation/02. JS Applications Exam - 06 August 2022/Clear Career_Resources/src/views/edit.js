@@ -25,7 +25,6 @@ let ctx = null;
 export async function showEdit(context) {
     ctx = context;
     const data = await getById(ctx.params.id);
-    console.log(data);
     context.render(editTemplate(data));
 }
 
@@ -43,5 +42,5 @@ async function getFormData(e) {
 
     await updateById(ctx.params.id, { title, imageUrl, category, description, requirements, salary });
     e.target.reset();
-    ctx.page.redirect(`/details/${ctx.parems.id}`);
+    ctx.page.redirect(`/details/${ctx.params.id}`);
 }
