@@ -34,7 +34,7 @@ function decorateContext(ctx, next) {
 }
  
 function updateNavigation() {
-    const user = sessionStorage.getItem('user');
+    const user = JSON.parse(sessionStorage.getItem('user'));
     if (user) {
         [...nav.querySelectorAll('.user')].map(a => a.style.display = 'inline-block');
         [...nav.querySelectorAll('.guest')].map(a => a.style.display = 'none');
