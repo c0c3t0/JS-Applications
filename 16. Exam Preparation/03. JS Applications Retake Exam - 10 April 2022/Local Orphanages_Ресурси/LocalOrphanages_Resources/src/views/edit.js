@@ -8,27 +8,27 @@ const editTemplate = (item) => html`
 
         <article class="input-group">
             <label for="title">Post Title</label>
-            <input type="title" name="title" id="title" value=${item.title}>
+            <input type="title" name="title" id="title" .value=${item.title}>
         </article>
 
         <article class="input-group">
             <label for="description">Description of the needs </label>
-            <input type="text" name="description" id="description" value=${item.description}>
+            <input type="text" name="description" id="description" .value=${item.description}>
         </article>
 
         <article class="input-group">
             <label for="imageUrl"> Needed materials image </label>
-            <input type="text" name="imageUrl" id="imageUrl" value=${item.imageUrl}>
+            <input type="text" name="imageUrl" id="imageUrl" .value=${item.imageUrl}>
         </article>
 
         <article class="input-group">
             <label for="address">Address of the orphanage</label>
-            <input type="text" name="address" id="address" value=${item.address}>
+            <input type="text" name="address" id="address" .value=${item.address}>
         </article>
 
         <article class="input-group">
             <label for="phone">Phone number of orphanage employee</label>
-            <input type="text" name="phone" id="phone" value=${item.phone}>
+            <input type="text" name="phone" id="phone" .value=${item.phone}>
         </article>
 
         <input type="submit" class="btn submit" value="Edit Post">
@@ -40,7 +40,6 @@ let ctx = null;
 export async function showEdit(context) {
     ctx = context;
     const data = await getById(ctx.params.id);
-    console.log(data);
     context.render(editTemplate(data));
 }
 
