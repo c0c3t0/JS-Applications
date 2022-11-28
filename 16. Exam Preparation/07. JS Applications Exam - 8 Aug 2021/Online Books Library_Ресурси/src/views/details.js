@@ -1,7 +1,7 @@
 import {  addLike, deleteById, getById, getTotalCount, liked } from '../api/data.js';
 import { html, nothing } from '../lit.js';
 
-const detailsTemplate = (data, isOwner, isLogged, hasLiked, onLike, totalCount) => html`
+const detailsTemplate = (data, isOwner, isLogged, hasLiked, totalCount) => html`
 <section id="details-page" class="details">
     <div class="book-information">
         <h3>${data.title}</h3>
@@ -50,20 +50,17 @@ export async function showDetails(context) {
         hasLiked = await liked(bookId, user._id);
     }
 
-    ctx.render(detailsTemplate(data, isOwner, isLogged, hasLiked, onLike, totalCount));
+    ctx.render(detailsTemplate(data, isOwner, isLogged, hasLiked, totalCount));
 
-    async function onLike(e) {
-        e.preventDefault();
-        await addLike({ bookId });
-        const totalCount = await getTotalCount(bookId);
-        hasLiked = await liked(bookId, user._id);
-
-        ctx.render(detailsTemplate(data, isOwner, isLogged, hasLiked, onLike, totalCount));
-    }
 }
 
-async function deleteItem(e) {
-    e.preventDefault();
+async function onLike() {
+    const bookId = ctx.params.id;
+    await addLike({ bookId });
+    ctx.page.redirect(`/details/${bookId}`);
+}
+
+async function deleteItem() {
     const confirmed = confirm('Are you sure you want to delete this item?');
     if (confirmed) {
         await deleteById(ctx.params.id);
