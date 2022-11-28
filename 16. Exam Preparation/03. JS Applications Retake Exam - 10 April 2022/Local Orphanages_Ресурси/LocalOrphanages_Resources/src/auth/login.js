@@ -31,6 +31,7 @@ async function getFormData(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const { email, password } = Object.fromEntries(formData);
+    
     if (!email || !password) {
         alert('All fields are required!');
         return;
