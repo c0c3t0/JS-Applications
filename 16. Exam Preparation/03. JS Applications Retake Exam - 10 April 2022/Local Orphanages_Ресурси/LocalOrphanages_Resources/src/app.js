@@ -1,17 +1,17 @@
 import { logout } from './api/user.js';
 import { page, render } from './lit.js';
-import { showDashboard } from './views/dashboard.js';
 import { showCreate } from './views/create.js';
 import { showDetails } from './views/details.js';
 import { showEdit } from './views/edit.js';
 import { showLogin } from './auth/login.js';
 import { showRegister } from './auth/register.js';
-import { showMyItems } from './views/ownerItems.js';
+import { showProfile } from './views/profile.js';
+import { showDashboard } from './views/dashboard.js';
 
 const root = document.querySelector('#main-content');
 
 page(decorateContext)
-page('/index', '/');
+page('/index.html', showDashboard);
 page('/', showDashboard);
 
 page('/login', showLogin);
@@ -21,7 +21,7 @@ page('/logout', onLogout);
 page('/create', showCreate);
 page('/details/:id', showDetails);
 page('/edit/:id', showEdit);
-page('/my-posts', showMyItems);
+page('/profile', showProfile);
 
 page.start();
 updateNavigation();
@@ -33,7 +33,7 @@ function decorateContext(ctx, next) {
 }
  
 function updateNavigation() {
-    const user = sessionStorage.getItem('user');
+    const user = JSON.parse(sessionStorage.getItem('user'));
     if (user) {
         document.querySelector('#user').style.display = 'inline-block';
         document.querySelector('#guest').style.display = 'none';
